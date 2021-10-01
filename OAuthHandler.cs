@@ -169,12 +169,17 @@
                 // Generate a URL page that asks for permissions for the specified scopes, and call our default web browser.
                 string oauthUrl = _threeLeggedApi.Authorize(config.ClientId, oAuthConstants.CODE, FORGE_CALLBACK, _scope);
                 var file = GetChromeExe();
+                var userData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "tmp_chrome");
                 ProcessStartInfo startInfo = new ProcessStartInfo(file)
                 {
                     WindowStyle = ProcessWindowStyle.Minimized,
                     ArgumentList = {
                         "/incognito",
-                        $@"{oauthUrl}"
+                        "--chrome-frame",
+                        $"--user-data-dir={userData}",
+                        "--window-size=540,720",
+                        $"--app={oauthUrl}",
+                        
                     },
                 };
                 var p = Process.Start(startInfo);
